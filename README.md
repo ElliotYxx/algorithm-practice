@@ -1,2 +1,2 @@
 # algorithm-practice
-算法练习 面试
+本目录进行一些算法的练习以及面试
