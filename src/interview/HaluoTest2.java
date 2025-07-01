@@ -22,7 +22,6 @@ import java.util.List;
  **/
 public class HaluoTest2 {
 
-
     public static void main(String[] args) {
 
         ListNode l1 = new ListNode(1);
@@ -45,7 +44,7 @@ public class HaluoTest2 {
 
         ListNode result = reverseList(l1, 2, 4);
         curr = result;
-        System.out.println("after reverseList:");
+        System.out.println("\nafter reverseList:");
         while (curr != null){
             System.out.print(curr.val + "");
             curr = curr.next;
