@@ -27,11 +27,13 @@ public class ReverseKList {
 
         // case1
         ListNode head = ListNode.createListNode(1,2,3,4,5);
+        printList(head);
         ListNode newHead = reverseKGroup(head, 2);
         printList(newHead);
 
         // case 2
         ListNode head2 = ListNode.createListNode(1,2,3,4,5);
+        printList(head2);
         ListNode newHead2 = reverseKGroup(head2, 3);
         printList(newHead2);
     }
