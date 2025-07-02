@@ -6,7 +6,7 @@ package com.algorithm;
  * @Description: todo
  **/
 public class ListNode {
-    public int val;
+    public Integer val;
     public ListNode next;
 
     public ListNode(int x) {
