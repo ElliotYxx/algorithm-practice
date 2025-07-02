@@ -1,8 +1,8 @@
-package practice.day5;
+package com.algorithm.practice.day5;
 
-import practice.ListNode;
+import com.algorithm.ListNode;
 
-import static practice.ListNode.printList;
+import static com.algorithm.ListNode.printList;
 
 /**
  * @Author: Elliot

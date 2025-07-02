@@ -1,4 +1,4 @@
-package practice.day3;
+package com.algorithm.practice.day3;
 
 /**
  * @Author: Elliot

@@ -1,6 +1,4 @@
-package interview;
-
-import java.util.List;
+package com.algorithm.interview;
 
 /**
  * @Author: Elliot

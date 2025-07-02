@@ -1,4 +1,4 @@
-package practice;
+package com.algorithm;
 
 /**
  * @Author: Elliot

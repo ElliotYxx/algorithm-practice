@@ -1,4 +1,4 @@
-package practice.day4;
+package com.algorithm.practice.day4;
 
 import java.util.Arrays;
 
