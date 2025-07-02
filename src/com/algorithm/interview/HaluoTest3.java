@@ -16,9 +16,6 @@ import java.util.Arrays;
 public class HaluoTest3 {
 
 
-
-
-
     public static void main(String[] args) {
 
 
