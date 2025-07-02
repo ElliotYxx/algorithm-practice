@@ -55,7 +55,6 @@ public class HaluoTest3 {
             return new int[]{};
         }
 
-//        int minPrice = prices[0];
         int minPrice = Integer.MAX_VALUE;
         int profit = 0;
         int buyIn = 0;
@@ -68,14 +67,12 @@ public class HaluoTest3 {
                 currMinIndex = i;
             }
             int currProfit = prices[i] - minPrice;
-            if (currProfit > profit){
+            if (currProfit > profit) {
                 profit = currProfit;
                 buyIn = currMinIndex;
                 saleOut = i;
             }
-
         }
-
         if (profit == 0){
             return new int[]{};
         }else{
