@@ -21,6 +21,7 @@ target
 
 # Idea
 .idea
+out
 *.iml
 
 # git
