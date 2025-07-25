@@ -8,18 +8,19 @@ import java.util.concurrent.*;
  * @Author: Elliot
  * @Date: 2025-07-25 11:21
  * @Description: todo
+ * 用 java 代码写一个 queryVendorResource 方法，在规定的 RT 范围内，拿到符合性能要求的供应商资源
  **/
 public class VendorQueryService {
 
     public class Vendor{
         private Long id;
         private String name;
-        // ms
-        private Long latency;
-        public Vendor(Long id, String name, Long latency) {
+        // milliseconds
+        private Long responseTimeMs;
+        public Vendor(Long id, String name, Long responseTimeMs) {
             this.id = id;
             this.name = name;
-            this.latency = latency;
+            this.responseTimeMs = responseTimeMs;
         }
 
         public Long getId() {
@@ -38,53 +39,85 @@ public class VendorQueryService {
             this.name = name;
         }
 
-        public Long getLatency() {
-            return latency;
+        public Long getResponseTimeMs() {
+            return responseTimeMs;
         }
 
-        public void setLatency(Long latency) {
-            this.latency = latency;
+        public void setResponseTimeMs(Long responseTimeMs) {
+            this.responseTimeMs = responseTimeMs;
+        }
+
+        public String toString() {
+            return "Vendor{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", responseTimeMs=" + responseTimeMs +
+                    '}';
         }
     }
 
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-    public List<Vendor> queryVendorResource(long rt) throws InterruptedException, ExecutionException, TimeoutException {
+    public List<Vendor> queryVendorResource(long rt) {
         // mock vendor resource
         List<Vendor> vendorResource = List.of(
-                new Vendor(1L, "resource1", 10L),
-                new Vendor(1L, "resource2", 20L),
-                new Vendor(2L, "resource3", 30L)
+                new Vendor(1L, "resource1", 100L),
+                new Vendor(2L, "resource2", 150L),
+                new Vendor(3L, "resource3", 300L)
         );
-        List<Future<Vendor>> futures = new ArrayList<>();
+        List<CompletableFuture<Vendor>> futureList = new ArrayList<>();
+        List<Vendor> resultList = new ArrayList<>();
+
         for (Vendor vendor : vendorResource) {
-            Future<Vendor> future = executorService.submit(() -> {
+            CompletableFuture<Vendor> future = CompletableFuture.supplyAsync(() -> {
                 try {
-                    // mock call vendor service by thread.sleep()
-                    Thread.sleep(vendor.getLatency());
+                    // mock fetch vendor resource
+                    Thread.sleep(vendor.getResponseTimeMs());
                     return vendor;
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return null;
+                } catch (Exception e) {
+                    // handle exception
+                    System.out.println("Error occurred while querying vendor: " + e.getMessage());
                 }
+                return null;
+            }, executorService)
+            .orTimeout(rt, TimeUnit.MILLISECONDS)
+            .exceptionally(e -> {
+                // handle timeout or other exceptions
+                System.out.println("exception occurred while querying vendor: " + vendor.getName());
+                return null;
             });
-            futures.add(future);
+            futureList.add(future);
         }
 
-        List<Vendor> resultList = new ArrayList<>();
-        for (Future<Vendor> future : futures) {
-            Vendor vendor = future.get(rt, TimeUnit.MILLISECONDS);
-            if (vendor != null) {
-                resultList.add(vendor);
+        try {
+            CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0])).join();
+            for (CompletableFuture<Vendor> future : futureList) {
+                try {
+                    Vendor vendor = future.get();
+                    if (vendor != null) {
+                        resultList.add(vendor);
+                    }
+                } catch (Exception e) {
+                    // handle exception
+                    System.out.println("Error occurred while querying vendor: " + e.getMessage());
+                }
             }
+        } catch (Exception e) {
+            // handle exception
+            System.out.println("Error occurred while querying vendor: " + e.getMessage());
+        }finally{
+            // shutdown the executor
+            executorService.shutdown();
         }
         return resultList;
     }
 
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
+    public static void main(String[] args) throws Exception {
         VendorQueryService service = new VendorQueryService();
-        service.queryVendorResource(50);
+        List<Vendor> resultList = service.queryVendorResource(150);
+        // should be vendor1 and vendor2
+        resultList.forEach(System.out::println);
     }
 
 }
