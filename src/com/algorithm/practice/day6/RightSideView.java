@@ -1,7 +1,6 @@
 package com.algorithm.practice.day6;
 
 import com.algorithm.TreeNode;
-import com.sun.source.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

@@ -48,7 +48,5 @@ public class Subsets {
         System.out.println(subsets(new int[]{1,2,3}));
         System.out.println(subsets(new int[]{0}));
         System.out.println(subsets(new int[]{}));
-
-
     }
 }
